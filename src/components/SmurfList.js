@@ -1,7 +1,8 @@
 import React from 'react';
 import Smurf from './Smurf';
+import {connect} from 'react-redux'
 
- const SmurfList = ()=> {
+ const SmurfList = (props)=> {
     const isLoading = false;
     const testSmurf = {
         id:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
@@ -15,12 +16,27 @@ import Smurf from './Smurf';
         return <h1>Loading...</h1>;
     }
 
-    return(<div className="listContainer">
-        <Smurf smurf={testSmurf}/>
-    </div>);
+    return(
+        <div className="listContainer">
+            {props.isLoading ? <h1>Loading data...</h1> : null}
+            {props.smurfs.map((smurf) => {
+                console.log(smurf)
+                return (
+                    <Smurf key={smurf.id} smurf={smurf} />
+                )
+                })}
+        </div>);
 }
 
-export default SmurfList;
+const mapStateToProps = (state) => {
+    return {
+      isLoading: state.isLoading,
+      smurfs:[ ...state.smurfs],
+      error: state.error
+    };
+  };
+
+export default connect(mapStateToProps)(SmurfList);
 
 //Task List:
 //1. Connect the smurfs and loading state values to the SmurfList component.
